@@ -13,7 +13,8 @@ var server = require('http').createServer((request, response) => {
 
 const io = require('socket.io')(server);
 io.on('connection', client => {
-	client.on('event', data => { /* … */ });
-	client.on('disconnect', () => { /* … */ });
+	console.log("connection!");
+	client.on('send', data => { console.log("send", data) });
+	client.on('disconnect', () => { console.log("disconnectd!") });
 });
 server.listen(3000);
