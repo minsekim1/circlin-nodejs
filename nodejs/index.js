@@ -26,7 +26,7 @@ const server = app.listen(port, () => {
 
 	//#region Socket APIs
 	const io = require("socket.io")(server);
-	// socket(io, dbconn)
+	socket(io)
 	//#endregion Socket APIs
 });
 
