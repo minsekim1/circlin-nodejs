@@ -1,4 +1,4 @@
-export const socket = (io) => {
+const socket = (io) => {
   io.on("connection", (socket) => {
     socket.on("send", (c) => {
       console.log("esnd!!",socket.id)
@@ -22,3 +22,5 @@ export const socket = (io) => {
     //#endregion
   });
 };
+
+module.exports = socket
