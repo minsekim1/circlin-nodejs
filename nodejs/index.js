@@ -4,17 +4,36 @@
 // 	socket.on('reply', () => { /* … */ }); // listen to the event
 // });
 
-var server = require('http').createServer((request, response) => {
-	response.writeHead(200, { "content-type": "text/html" });
-	response.write("<h1>Welcome to Circlin Node server</h1>");
-	console.log("An anonymous user came in.", request.method, request.url)
-	response.end();
+
+// import { dbconn } from "./config/mysql/database";
+const express = require('express');
+const app = express();
+const port = 3000;
+
+let isDisableKeepAlive = false;
+app.use((req, res, next) => {
+	if (isDisableKeepAlive) {
+		res.set("Connection", "close");
+	}
+	next();
 });
 
-const io = require('socket.io')(server);
-io.on('connection', client => {
-	console.log("connection!");
-	client.on('send', data => { console.log("send", data) });
-	client.on('disconnect', () => { console.log("disconnectd!") });
+app.get("/", (req, res) => res.send(`running in server ...`));
+
+const server = app.listen(port, () => {
+	if (process.send) process.send("ready");
+	console.log(`server is listening on port ${port} `);
+
+	//#region Socket APIs
+	const io = require("socket.io")(server);
+	// socket(io, dbconn)
+	//#endregion Socket APIs
 });
-server.listen(3000);
+
+process.on("SIGINT", () => {
+	isDisableKeepAlive = true;
+	server.close(() => {
+		l.info(`server closed `);
+		process.exit(0);
+	});
+});
