@@ -1,4 +1,4 @@
-export const socket = (io, db_conn) => {
+export const socket = (io) => {
   io.on("connection", (socket) => {
     socket.on("send", (c) => {
       console.log("esnd!!",socket.id)
